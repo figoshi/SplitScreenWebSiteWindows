@@ -1,5 +1,0 @@
-E:\SVN\Benz\trunk\Src\BenzScreenWindow\BenzScreenTools\bin\x64\Debug\BenzScreenTools.dll
-E:\SVN\Benz\trunk\Src\BenzScreenWindow\BenzScreenTools\bin\x64\Debug\BenzScreenTools.pdb
-E:\SVN\Benz\trunk\Src\BenzScreenWindow\BenzScreenTools\obj\x64\Debug\BenzScreenTools.dll
-E:\SVN\Benz\trunk\Src\BenzScreenWindow\BenzScreenTools\obj\x64\Debug\BenzScreenTools.pdb
-E:\SVN\Benz\trunk\Src\BenzScreenWindow\BenzScreenTools\obj\x64\Debug\BenzScreenTools.csproj.CoreCompileInputs.cache

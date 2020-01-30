@@ -20,10 +20,18 @@ namespace BenzScreenWindow
 {
     public partial class BenzScreenWindowForm : Form
     {
+        
         public BenzScreenWindowForm()
         {
             InitializeComponent();
 
+           
+
+            
+        }
+
+        private void BenzScreenWindowForm_Load(object sender, EventArgs e)
+        {
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "XMLConfig.xml"));
 
@@ -32,14 +40,6 @@ namespace BenzScreenWindow
             //获取屏幕信息
             Screen[] sc;
             sc = Screen.AllScreens;
-
-            //获取输入法,切换成英文输入法,猜测cefsharp和多屏展示和中文输入法有冲突
-            var type = InputLanguageHelper.GetCultureType();
-
-            if (type.ToLower() == "zh-cn")
-            {
-                InputLanguageHelper.SwitchToEnLanguageMode();
-            }
 
             foreach (var i in model.Nodes)
             {
@@ -50,15 +50,15 @@ namespace BenzScreenWindow
 
                 var from = new BenzScreenWindowWebsiteForm(i, sc[i.Window].Bounds.Left, sc[i.Window].Bounds.Top);
 
+                if (model.Nodes.IndexOf(i) == model.Nodes.Count() - 1)
+                {
+                    from.SetIsLast();
+                }
+
                 from.Show();
 
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
-        }
-
-        private void BenzScreenWindowForm_Load(object sender, EventArgs e)
-        {
-
         }  
 
     }

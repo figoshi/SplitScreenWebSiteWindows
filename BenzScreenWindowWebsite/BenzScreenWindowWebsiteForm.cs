@@ -18,7 +18,7 @@ namespace BenzScreenWindowWebsite
         static BenzScreenWindowWebsiteForm()
         {
             var setting = new CefSettings();
-            
+
             // 设置语言
             setting.Locale = "zh-CN";
             //cef设置userAgent
@@ -36,11 +36,30 @@ namespace BenzScreenWindowWebsite
         {
         }
 
-        public BenzScreenWindowWebsiteForm(Node node,int x,int y)
+        /// <summary>
+        /// 该组字段用于判断哪个是最后一个循环的屏幕，后续需要让该屏幕设置焦点命中
+        /// 否则多屏幕下在不用输入法情况下会出现无限卡顿
+        /// </summary>
+        bool m_IsLast = false;
+
+        public bool IsLast
         {
-            SetNode(node,x,y);
+            get { return m_IsLast; }
         }
 
+        public BenzScreenWindowWebsiteForm(Node node, int x, int y)
+        {
+            SetNode(node, x, y);
+        }
+
+        /// <summary>
+        /// 该组字段用于判断哪个是最后一个循环的屏幕，后续需要让该屏幕设置焦点命中
+        /// 否则多屏幕下在不用输入法情况下会出现无限卡顿
+        /// </summary>
+        public void SetIsLast()
+        {
+            m_IsLast = true;
+        }
 
 
         private void SetNode(Node node, int x, int y)
@@ -62,9 +81,49 @@ namespace BenzScreenWindowWebsite
             System.Windows.Forms.Control.CheckForIllegalCrossThreadCalls = false;
         }
 
+
+
+        //调用API
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetForegroundWindow(); //获得本窗体的句柄
+        [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);//设置此窗体为活动窗体
+        //定义变量,句柄类型
+        public IntPtr Handle1;
+        Timer timer2 = new Timer();
+
+
+        //加载一个定时器控件,验证当前WINDOWS句柄是否和本窗体的句柄一样,如果不一样,则激活本窗体,用户解决无限循环卡顿问题
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            while (true) //持续使该窗体置为最前,屏蔽该行则单次置顶
+            {
+                var handle = GetForegroundWindow();
+
+                if (Handle1 != handle)
+                {
+                    SetForegroundWindow(Handle1);
+                }
+                else
+                {
+                    timer2.Stop();
+
+                    break;
+                }
+            }
+        }
+    
+
         private void BenzScreenWindowWebsiteForm_Load(object sender, EventArgs e)
         {
+            var form = (BenzScreenWindowWebsiteForm)sender;
 
+            if (form.IsLast) {
+                Handle1 = this.Handle;
+                timer2.Tick += new EventHandler(timer2_Tick);
+                timer2.Interval = 1000;
+                timer2.Start();
+            }
         }
     }
 }

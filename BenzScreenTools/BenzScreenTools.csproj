@@ -68,7 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InputLanguageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XML\Model\XmlModel.cs" />
     <Compile Include="XML\XmlSerializeHelper.cs" />
